@@ -1,21 +1,50 @@
 def carica_da_file(file_path):
     """Carica i libri dal file"""
     # TODO
+    try:
+        b = open(file_path, 'r')
+        tab = []
+        sezione = b.readline()
+        for line in b:
+            riga = line.strip().split(",")
+            tab.append(riga)
+        return tab
+    except FileNotFoundError:
+        print(None)
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
+    lista = []
+    lista.append(titolo)
+    lista.append(autore)
+    lista.append(anno)
+    lista.append(pagine)
+    lista.append(sezione)
+    biblioteca.append(lista)
+    return biblioteca
 
 
 def cerca_libro(biblioteca, titolo):
     """Cerca un libro nella biblioteca dato il titolo"""
     # TODO
-
+    for i in biblioteca:
+        if i[0] == titolo:
+            return i
+    else:
+        return None
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
     # TODO
+    risultato = {}
+    for i in biblioteca:
+        if int(i[4]) == sezione:
+            risultato += i
+    else:
+        risultato = None
+    sorted(risultato)
 
 
 def main():
