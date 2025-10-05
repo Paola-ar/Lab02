@@ -26,7 +26,7 @@ def carica_da_file(file_path):
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
-    for libri in biblioteca(): # libri contiene la lista dei libri in quella sezione della biblioteca
+    for libri in biblioteca.values(): # libri contiene la lista dei libri in quella sezione della biblioteca
         for libro in libri:
             if libro["titolo"].lower() == titolo.lower():
                 return None
@@ -52,7 +52,7 @@ def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
 def cerca_libro(biblioteca, titolo):
     """Cerca un libro nella biblioteca dato il titolo"""
     # TODO
-    for sezione, libri in biblioteca(): # per ogni sezione della biblioteca
+    for (sezione,libri) in biblioteca.items(): # per ogni sezione della biblioteca # items restituisce sia la chiave che il valore
         for libro in libri: # per ogni libro della lista libri
             if libro["titolo"].lower() == titolo.lower():
                 return f'{libro["titolo"]},{libro["autore"]},{libro["anno"]}, {libro["pagine"]},{sezione}'
