@@ -2,49 +2,79 @@ def carica_da_file(file_path):
     """Carica i libri dal file"""
     # TODO
     try:
-        b = open(file_path, 'r')
-        tab = []
-        sezione = b.readline()
+        b = open(file_path, 'r', encoding = "utf-8") # apre il file
+        tot_sezioni = int(b.readline()) # legge la prima riga
+
+        biblioteca = {}
+        for i in range(1,tot_sezioni+1): # tot_sezioni inclusa
+            biblioteca[i] = [] # per ogni sezione i, creiamo una lista vuota
+
         for line in b:
-            riga = line.strip().split(",")
-            tab.append(riga)
-        return tab
+            titolo, autore, anno, pagine, sezione = line.strip().split(",")
+            libro = {"titolo":titolo, "autore":autore, "anno":int(anno), "pagine":int(pagine)}
+            sezione_num = int(sezione)
+            if sezione_num in biblioteca:
+                biblioteca[sezione_num].append(libro)
+
+        b.close() #chiudo il file
+        return biblioteca
+
     except FileNotFoundError:
-        print(None)
+        return None
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
-    lista = []
-    lista.append(titolo)
-    lista.append(autore)
-    lista.append(anno)
-    lista.append(pagine)
-    lista.append(sezione)
-    biblioteca.append(lista)
-    return biblioteca
+    for libri in biblioteca(): # libri contiene la lista dei libri in quella sezione della biblioteca
+        for libro in libri:
+            if libro["titolo"].lower() == titolo.lower():
+                return None
+
+    if sezione not in biblioteca:
+        return None
+
+    nuovo_libro = {"titolo": titolo, "autore": autore, "anno": anno, "pagine": pagine} # salvo nuovo libro come dizionario
+    biblioteca[sezione].append(nuovo_libro) # aggiunta del libro nella sezione della biblioteca
+
+    try: # aggiorna il file, aprendolo in "aggiunta", senza eliminare il contenuto già presente nel file
+        file = open(file_path, 'w', encoding = "utf-8")
+        file.write(f"{titolo},{autore},{anno},{pagine},{sezione}\n")
+        file.close()
+        return biblioteca
+
+    except FileNotFoundError:
+        return None
+
+
 
 
 def cerca_libro(biblioteca, titolo):
     """Cerca un libro nella biblioteca dato il titolo"""
     # TODO
-    for i in biblioteca:
-        if i[0] == titolo:
-            return i
-    else:
-        return None
+    for sezione, libri in biblioteca(): # per ogni sezione della biblioteca
+        for libro in libri: # per ogni libro della lista libri
+            if libro["titolo"].lower() == titolo.lower():
+                return f'{libro["titolo"]},{libro["autore"]},{libro["anno"]}, {libro["pagine"]},{sezione}'
+            else:
+                return None
+
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
     # TODO
-    risultato = {}
-    for i in biblioteca:
-        if int(i[4]) == sezione:
-            risultato += i
-    else:
-        risultato = None
-    sorted(risultato)
+
+    if sezione not in biblioteca:
+        return None
+
+    libri = biblioteca[sezione]
+    titoli = []
+
+    for libro in libri:
+        titoli.append(libro["titolo"]) # aggiunge il titolo del libro di ogni sezione alla lista da ordinare
+
+    titoli.sort()
+    return titoli
 
 
 def main():
